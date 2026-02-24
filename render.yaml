@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: shigoto-raku-rac-rotate
+    env: node
+    plan: free
+    autoDeploy: true
+    buildCommand: "echo 'No build step required'"
+    startCommand: "node server.js"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PESTICIDES_JSON_PATH
+        value: data/pesticides_target.json
+      - key: RAC_JSON_PATH
+        value: data/pesticide_rac_target.json
