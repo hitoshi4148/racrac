@@ -64,6 +64,21 @@ body {
   max-width: min(100%, 728px);
 }
 
+.ad-banners--secondary {
+  margin-top: 0.25rem;
+}
+
+.ad-link-tile {
+  max-width: min(100%, 300px);
+  flex: 0 1 auto;
+}
+
+.ad-link-tile img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 300 / 100;
+}
+
 .and-label {
   font-size: 0.75rem;
 }
