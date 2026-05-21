@@ -190,6 +190,36 @@ body {
   color: #7a8591;
 }
 
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.rac-dup-count {
+  font-size: 0.85em;
+  font-weight: 600;
+  color: #6c757d;
+  white-space: nowrap;
+}
+
+.remarks-high {
+  color: #dc3545;
+}
+
+.remarks-medium {
+  color: #fd7e14;
+}
+
+.remarks-low {
+  color: #198754;
+}
+
+.remarks-mihassei {
+  color: #0d6efd;
+}
+
 @media (max-width: 768px) {
   .ad-banners {
     flex-direction: column;

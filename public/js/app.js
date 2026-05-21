@@ -46,6 +46,46 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function isEmptyRemarks(text) {
+    const trimmed = String(text || "").trim();
+    return trimmed === "" || trimmed === "-" || trimmed === "－";
+  }
+
+  function colorizeRemarksText(text) {
+    const escaped = escapeHtml(text);
+    return escaped.replace(/未発生|高|中|低/g, match => {
+      const classMap = {
+        "高": "remarks-high",
+        "中": "remarks-medium",
+        "低": "remarks-low",
+        "未発生": "remarks-mihassei"
+      };
+      return `<span class="${classMap[match]}">${match}</span>`;
+    });
+  }
+
+  function renderRemarks(remarks) {
+    if (isEmptyRemarks(remarks)) return escapeHtml(remarks || "－");
+    const colored = colorizeRemarksText(remarks);
+    return `<strong>${colored}</strong>`;
+  }
+
+  function countMatchedRacCodes(sameGroupData) {
+    const matched = new Set();
+    (sameGroupData || []).forEach(p => {
+      (p.matchedRacCodes || []).forEach(code => matched.add(code));
+    });
+    return matched.size;
+  }
+
   function renderRacBadges(racCodes, matchedCodes = []) {
     if (!racCodes || racCodes.length === 0) return "－";
     const matched = new Set(matchedCodes || []);
@@ -131,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
       html += `<tr><th>グループ名</th><td>${rac.group_name || "－"}</td></tr>`;
       html += `<tr><th>作用機作</th><td>${rac.made_of_action || "－"}</td></tr>`;
       html += `<tr><th>代表成分</th><td>${rac.examples || "－"}</td></tr>`;
-      html += `<tr><th>備考</th><td>${rac.remarks || "－"}</td></tr>`;
+      html += `<tr><th>備考</th><td>${renderRemarks(rac.remarks)}</td></tr>`;
       html += "</tbody></table></div>";
     });
     return html;
@@ -192,10 +232,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const rotationRes = await fetch(`/api/rotation?regNo=${encodeURIComponent(regNo)}`);
       const rotationData = await rotationRes.json();
 
+      const sameGroupDupCount = countMatchedRacCodes(sameGroupData);
+
       let html = "";
       html += '<div class="rotation-grid mt-3">';
       html += '<div class="card"><div class="card-body">';
-      html += '<h6>同一グループを含む農薬</h6><ul class="list-group list-group-flush rotation-list">';
+      html += `<h6 class="section-heading">同一グループを含む農薬 <span class="rac-dup-count">RAC重複：${sameGroupDupCount}</span></h6><ul class="list-group list-group-flush rotation-list">`;
       if (!sameGroupData || sameGroupData.length === 0) {
         html += '<li class="list-group-item">該当なし</li>';
       } else {
@@ -208,7 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
       html += "</ul></div></div>";
 
       html += '<div class="card"><div class="card-body">';
-      html += '<h6>次回のおすすめローテーション</h6><ul class="list-group list-group-flush rotation-list">';
+      html += '<h6 class="section-heading">次回のおすすめローテーション <span class="rac-dup-count">RAC重複：0</span></h6><ul class="list-group list-group-flush rotation-list">';
       if (!rotationData || rotationData.length === 0) {
         html += '<li class="list-group-item">該当なし</li>';
       } else {
