@@ -90,6 +90,24 @@ body {
   line-height: 1.55;
 }
 
+.subtitle-links {
+  font-size: 0.92rem;
+}
+
+.subtitle-links a {
+  color: #336699;
+  text-decoration: none;
+}
+
+.subtitle-links a:hover {
+  text-decoration: underline;
+}
+
+.subtitle-links-sep {
+  margin: 0 0.5rem;
+  color: #adb5bd;
+}
+
 .rac-group-card {
   border-left: 4px solid #0d6efd;
   margin-bottom: 0.75rem;
